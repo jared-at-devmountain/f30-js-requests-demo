@@ -51,7 +51,7 @@ function getOldChars(event) {
   clearCharacters()
 
   const age = ageInput.value
-//http://localhost:400/character/?age=35&height=32
+//http://localhost:400/character/?age=35
 
   axios.get(baseURL + '/character/?age=' + age)
   .then((response) => {
@@ -61,6 +61,32 @@ function getOldChars(event) {
   })
   .catch((err) => {
     console.log('got an error: ' + err)
+  })
+}
+
+function createNewChar(event) {
+  event.preventDefault()
+
+  clearCharacters()
+
+  let newLikes = newLikesText.value.split(',')
+
+  let body = {
+    firstName: newFirstInput.value,
+    lastName: newLastInput.value,
+    gender: newGenderDropDown.value,
+    age: newAgeInput.value,
+    likes: newLikes
+  }
+
+  axios.post(baseURL + '/character', body)
+  .then((response) => {
+    for (let i = 0; i < response.data.length; i++) {
+      createCharacterCard(response.data[i])
+    }
+  })
+  .catch((err) => {
+    console.log(err)
   })
 }
 
@@ -84,6 +110,7 @@ function clearCharacters() {
 
 getAllBtn.addEventListener('click', getAllChars)
 ageForm.addEventListener('submit', getOldChars)
+createForm.addEventListener('submit', createNewChar)
 
 for (let i = 0; i < charBtns.length; i++) {
   charBtns[i].addEventListener('click', getOneChar)
